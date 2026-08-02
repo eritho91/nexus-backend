@@ -1,82 +1,73 @@
 # Nexus New Demo
 
-Spring Boot/Maven-projekt för anställda, arbetspass och JWT-baserad inloggning.
+Spring Boot-projekt för att hantera anställda och arbetspass.
 
-Nuvarande fokus är testklasser. Projektet har tester på tre nivåer: service, repository och controller.
+Projektet använder bland annat:
 
-## Kör tester
+- Spring Web MVC
+- Spring Data JPA
+- Spring Security
+- JWT
+- PostgreSQL i applikationen
+- H2 i tester
+- MapStruct
+- Maven
+
+## Tester
+
+Tester körs med:
 
 ```bash
 ./mvnw test
 ```
 
-Senaste status: `BUILD SUCCESS`.
+Just nu finns tester för service-, repository- och controller-lagret.
 
-## Teststatus
+### Service
 
-### Service-tester
+`EmployeeServiceTest` testar att det går att:
 
-`EmployeeServiceTest` testar:
+- skapa en anställd
+- hämta en anställd med id
+- hantera att en anställd saknas
+- hämta alla anställda
 
-- skapa employee
-- hämta employee när id finns
-- kasta exception när id saknas
-- hämta alla employees
+`ShiftServiceTest` testar att det går att:
 
-`ShiftServiceTest` testar:
+- skapa ett arbetspass
+- hämta alla arbetspass
+- lägga till en anställd på ett arbetspass
+- ta bort en anställd från ett arbetspass
 
-- skapa shift
-- hämta alla shifts
-- lägga till employee på shift
-- ta bort employee från shift
+Service-testerna använder Mockito, så repository och mapper är mockade.
 
-### Repository-test
+### Repository
 
-`EmployeeRepositoryTest` testar:
+`EmployeeRepositoryTest` testar `findByUsername` mot H2.
 
-- `findByUsername` mot riktig H2-testdatabas
+Det testet kör alltså mot en riktig testdatabas, inte mot mockar.
 
-Detta visar att repository/JPA-lagret fungerar utan att starta PostgreSQL.
+### Controller
 
-### Controller-test
-
-`EmployeeControllerTest` testar med `MockMvc`:
+`EmployeeControllerTest` testar två endpoints med `MockMvc`:
 
 - `GET /employees`
 - `GET /employees/{id}`
-- admin-behörighet med `@WithMockUser`
-- HTTP-status och JSON-response
 
-## Var vi är nu
+Eftersom endpoints är skyddade används `@WithMockUser(roles = "ADMIN")` i testerna.
 
-Projektet har en bra grund för LIA-bedömning:
+## Nästa saker att göra
 
-- Mockito används i service-tester
-- H2 används i repository-test
-- MockMvc används i controller-test
-- Spring Security hanteras i controller-test
-- hela testsviten går igenom lokalt
+Om projektet byggs vidare är nästa rimliga steg:
 
-## Nästa rimliga steg
+- lägga till `ShiftControllerTest`
+- testa login-flödet i `AuthController`
+- testa relationen mellan `Employee` och `Shift` i repository-lagret
+- se över felhantering, till exempel vad API:t ska returnera när id saknas
 
-Om mer tid finns, prioritera detta:
+## Kort om testtyperna
 
-1. Byt namn på `createEmployeeShouldReturn201`, eftersom `201` är controller-/HTTP-språk och testet ligger i service-lagret.
-2. Lägg till `ShiftControllerTest` för `GET /shifts`.
-3. Lägg till ett repository-test för relationen mellan `Employee` och `Shift`.
-4. Lägg till ett auth-test för `POST /auth/login`.
-5. Snygga upp upprepade testdata med små helper-metoder om testerna börjar bli svåra att läsa.
-
-## Viktig skillnad mellan testtyper
-
-- `MockitoExtension`: testar en klass isolerat, utan Spring och utan databas.
-- `@DataJpaTest`: testar riktig repository/JPA mot H2.
-- `@WebMvcTest`: testar controller-lagret med Spring MVC och `MockMvc`.
-- `@SpringBootTest`: startar större del av appen och passar bättre för integrationstester.
-
-## Definition of done för nuvarande testfas
-
-- `./mvnw test` passerar.
-- Service-lagret har både happy path och felväg.
-- Repository-lagret är testat mot H2.
-- Controller-lagret har minst ett skyddat endpoint-test med JSON-kontroll.
+- Mockito-test: testar en klass isolerat
+- `@DataJpaTest`: testar repository mot H2
+- `@WebMvcTest`: testar controller med `MockMvc`
+- `@SpringBootTest`: startar en större del av applikationen
