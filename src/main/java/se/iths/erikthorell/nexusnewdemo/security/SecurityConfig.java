@@ -106,10 +106,6 @@ public class SecurityConfig {
             String role =
                     jwt.getClaimAsString("role");
 
-
-            System.out.println("TOKEN ROLE: " + role);
-
-
             return List.of(
                     new SimpleGrantedAuthority(
                             "ROLE_" + role
