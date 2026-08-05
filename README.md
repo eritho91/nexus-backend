@@ -1,73 +1,69 @@
 # Nexus New Demo
 
-Spring Boot-projekt för att hantera anställda och arbetspass.
+Spring Boot-projekt för att hantera anställda och arbetspass. Projektet innehåller REST-endpoints, JWT-baserad säkerhet, PostgreSQL i applikationen och H2 i tester.
 
-Projektet använder bland annat:
+## Teknik
 
+- Java 17
+- Spring Boot
 - Spring Web MVC
 - Spring Data JPA
-- Spring Security
-- JWT
-- PostgreSQL i applikationen
-- H2 i tester
+- Spring Security och JWT
+- PostgreSQL
+- H2 för tester
 - MapStruct
 - Maven
 
-## Tester
+## Kom igång lokalt
 
-Tester körs med:
+Projektet kräver en PostgreSQL-databas och följande miljövariabler:
+
+```bash
+export DB_URL=jdbc:postgresql://localhost:5432/nexus
+export DB_USERNAME=postgres
+export DB_PASSWORD=postgres
+export JWT_SECRET=01234567890123456789012345678901
+export ADMIN_PASSWORD=admin1234
+```
+
+Starta applikationen:
+
+```bash
+./mvnw spring-boot:run
+```
+
+Kör tester:
 
 ```bash
 ./mvnw test
 ```
 
-Just nu finns tester för service-, repository- och controller-lagret.
+## Demo-admin
 
-### Service
+Vid uppstart skapas en admin-användare om den inte redan finns.
 
-`EmployeeServiceTest` testar att det går att:
+```text
+Användarnamn: admin
+Lösenord: admin1234
+```
 
-- skapa en anställd
-- hämta en anställd med id
-- hantera att en anställd saknas
-- hämta alla anställda
+De här uppgifterna är endast för lokal demo. I en riktig miljö ska `ADMIN_PASSWORD` sättas till ett starkt lösenord utanför koden.
 
-`ShiftServiceTest` testar att det går att:
+## Funktioner
 
-- skapa ett arbetspass
-- hämta alla arbetspass
-- lägga till en anställd på ett arbetspass
-- ta bort en anställd från ett arbetspass
+- Skapa och hämta anställda
+- Skapa och hämta arbetspass
+- Lägga till och ta bort anställda från arbetspass
+- Ta bort anställda med `DELETE /employees/{id}`
+- Skyddade endpoints för admin
+- Swagger/OpenAPI
 
-Service-testerna använder Mockito, så repository och mapper är mockade.
+## Felhantering och validering
 
-### Repository
+Projektet har en egen `ResourceNotFoundException` och en global exception handler som returnerar 404 när en resurs saknas.
 
-`EmployeeRepositoryTest` testar `findByUsername` mot H2.
+DTO:er för att skapa anställda och arbetspass har validation-regler. Controllers använder `@Valid`, så ogiltig input stoppas innan service-lagret körs.
 
-Det testet kör alltså mot en riktig testdatabas, inte mot mockar.
+## Tester
 
-### Controller
-
-`EmployeeControllerTest` testar två endpoints med `MockMvc`:
-
-- `GET /employees`
-- `GET /employees/{id}`
-
-Eftersom endpoints är skyddade används `@WithMockUser(roles = "ADMIN")` i testerna.
-
-## Nästa saker att göra
-
-Om projektet byggs vidare är nästa rimliga steg:
-
-- lägga till `ShiftControllerTest`
-- testa login-flödet i `AuthController`
-- testa relationen mellan `Employee` och `Shift` i repository-lagret
-- se över felhantering, till exempel vad API:t ska returnera när id saknas
-
-## Kort om testtyperna
-
-- Mockito-test: testar en klass isolerat
-- `@DataJpaTest`: testar repository mot H2
-- `@WebMvcTest`: testar controller med `MockMvc`
-- `@SpringBootTest`: startar en större del av applikationen
+Testerna täcker service-, repository- och controller-lagret. Controller-testerna använder `MockMvc` och mockad admin-användare.

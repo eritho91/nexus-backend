@@ -1,11 +1,11 @@
 package se.iths.erikthorell.nexusnewdemo.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.iths.erikthorell.nexusnewdemo.dto.CreateEmployeeRequest;
 import se.iths.erikthorell.nexusnewdemo.dto.EmployeeDto;
-import se.iths.erikthorell.nexusnewdemo.entity.Employee;
 import se.iths.erikthorell.nexusnewdemo.service.EmployeeService;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class EmployeeController {
 
     @PostMapping
     public ResponseEntity<EmployeeDto> createEmployee(
-            @RequestBody CreateEmployeeRequest request
+            @RequestBody @Valid CreateEmployeeRequest request
     ) {
 
         return ResponseEntity.ok(
@@ -53,7 +53,7 @@ public class EmployeeController {
     public ResponseEntity<Void> deleteEmployee(
             @PathVariable Long id
     ) {
-
+        employeeService.deleteEmployee(id);
         return ResponseEntity.noContent().build();
     }
 }

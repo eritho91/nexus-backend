@@ -1,16 +1,20 @@
 package se.iths.erikthorell.nexusnewdemo.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import java.time.LocalTime;
-import java.time.OffsetDateTime;
 
 public record CreateShiftRequest(
+        @NotBlank
+        @Size(min = 1, max = 50)
         String location,
+        @NotNull
         LocalDate date,
+        @NotNull
         LocalTime time
 ) {
 }

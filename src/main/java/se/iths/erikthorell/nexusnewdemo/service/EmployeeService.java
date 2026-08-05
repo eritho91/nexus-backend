@@ -8,6 +8,7 @@ import se.iths.erikthorell.nexusnewdemo.dto.EmployeeDto;
 import se.iths.erikthorell.nexusnewdemo.entity.Employee;
 import se.iths.erikthorell.nexusnewdemo.mapper.EmployeeMapper;
 import se.iths.erikthorell.nexusnewdemo.repository.EmployeeRepository;
+import se.iths.erikthorell.nexusnewdemo.exception.ResourceNotFoundException;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class EmployeeService {
     public EmployeeDto getEmployee(Long id) {
 
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
 
         return employeeMapper.toDto(employee);
     }
@@ -65,7 +66,6 @@ public class EmployeeService {
 
         employee.setRole("USER");
 
-
         Employee saved =
                 employeeRepository.save(employee);
 
@@ -79,5 +79,11 @@ public class EmployeeService {
         return firstName.substring(0,3).toLowerCase()
                 +
                 lastName.substring(0,3).toLowerCase();
+    }
+
+    public void deleteEmployee(Long id){
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
+        employeeRepository.delete(employee);
     }
 }

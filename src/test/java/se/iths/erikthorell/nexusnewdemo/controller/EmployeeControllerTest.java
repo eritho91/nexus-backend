@@ -7,14 +7,14 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import se.iths.erikthorell.nexusnewdemo.dto.EmployeeDto;
+import se.iths.erikthorell.nexusnewdemo.exception.ResourceNotFoundException;
 import se.iths.erikthorell.nexusnewdemo.service.EmployeeService;
 
 import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(EmployeeController.class)
 public class EmployeeControllerTest {
@@ -64,5 +64,16 @@ public class EmployeeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("eritho"));
 
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void getEmployeeShouldReturn404WhenEmployeeDoesNotExist() throws Exception{
+        when(employeeService.getEmployee(99L))
+                .thenThrow(new ResourceNotFoundException("Employee not found"));
+
+        mockMvc.perform(get("/employees/99"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Employee not found"));
     }
 }

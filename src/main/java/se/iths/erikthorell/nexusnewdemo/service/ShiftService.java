@@ -6,6 +6,7 @@ import se.iths.erikthorell.nexusnewdemo.dto.CreateShiftRequest;
 import se.iths.erikthorell.nexusnewdemo.dto.ShiftDto;
 import se.iths.erikthorell.nexusnewdemo.entity.Employee;
 import se.iths.erikthorell.nexusnewdemo.entity.Shift;
+import se.iths.erikthorell.nexusnewdemo.exception.ResourceNotFoundException;
 import se.iths.erikthorell.nexusnewdemo.mapper.ShiftMapper;
 import se.iths.erikthorell.nexusnewdemo.repository.EmployeeRepository;
 import se.iths.erikthorell.nexusnewdemo.repository.ShiftRepository;
@@ -59,10 +60,10 @@ public class ShiftService {
     ) {
 
         Shift shift = shiftRepository.findById(shiftId)
-                .orElseThrow();
+                .orElseThrow(() -> new ResourceNotFoundException("Shift not found"));
 
         Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow();
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
 
 
         shift.getEmployees().add(employee);
@@ -79,7 +80,7 @@ public class ShiftService {
     ) {
 
         Shift shift = shiftRepository.findById(shiftId)
-                .orElseThrow();
+                .orElseThrow(() -> new ResourceNotFoundException("Shift not found"));
 
 
         shift.getEmployees()

@@ -1,11 +1,11 @@
 package se.iths.erikthorell.nexusnewdemo.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.iths.erikthorell.nexusnewdemo.dto.CreateShiftRequest;
 import se.iths.erikthorell.nexusnewdemo.dto.ShiftDto;
-import se.iths.erikthorell.nexusnewdemo.entity.Shift;
 import se.iths.erikthorell.nexusnewdemo.service.ShiftService;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class ShiftController {
 
     @PostMapping
     public ResponseEntity<ShiftDto> createShift(
-            @RequestBody CreateShiftRequest request
+            @RequestBody @Valid CreateShiftRequest request
     ) {
 
         return ResponseEntity.ok(

@@ -47,15 +47,6 @@ public class SecurityConfig {
                         )
                         .permitAll()
 
-
-                        // Registrering av nya användare
-                        .requestMatchers(
-                                "/employees"
-                        )
-                        .permitAll()
-
-
-                        // Endast ADMIN
                         .requestMatchers(
                                 "/shifts/**",
                                 "/employees/**"

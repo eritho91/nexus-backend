@@ -1,6 +1,7 @@
 package se.iths.erikthorell.nexusnewdemo.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,8 @@ public class AdminInitializer implements CommandLineRunner {
 
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
+    @Value("${admin.password}")
+    private String adminPassword;
 
 
     @Override
@@ -26,7 +29,7 @@ public class AdminInitializer implements CommandLineRunner {
             admin.setLastName("Thorell");
             admin.setUsername("admin");
             admin.setPassword(
-                    passwordEncoder.encode("admin1234")
+                    passwordEncoder.encode(adminPassword)
             );
             admin.setRole("ADMIN");
 
