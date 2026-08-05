@@ -1,69 +1,72 @@
-# Nexus New Demo
+Nexus Backend
 
-Spring Boot-projekt för att hantera anställda och arbetspass. Projektet innehåller REST-endpoints, JWT-baserad säkerhet, PostgreSQL i applikationen och H2 i tester.
+Nexus Backend är ett Spring Boot-projekt för att hantera anställda och arbetspass.
 
-## Teknik
+Projektet visar backendutveckling med säkerhet, databaser, validering, felhantering och automatiska tester.
 
-- Java 17
-- Spring Boot
-- Spring Web MVC
-- Spring Data JPA
-- Spring Security och JWT
-- PostgreSQL
-- H2 för tester
-- MapStruct
-- Maven
+Demo
 
-## Kom igång lokalt
+Swagger UI:
 
-Projektet kräver en PostgreSQL-databas och följande miljövariabler:
+https://gastric-valencia-klerk-4f003058.koyeb.app/swagger-ui/index.html
 
-```bash
-export DB_URL=jdbc:postgresql://localhost:5432/nexus
-export DB_USERNAME=postgres
-export DB_PASSWORD=postgres
-export JWT_SECRET=01234567890123456789012345678901
-export ADMIN_PASSWORD=admin1234
-```
-
-Starta applikationen:
-
-```bash
-./mvnw spring-boot:run
-```
-
-Kör tester:
-
-```bash
-./mvnw test
-```
-
-## Demo-admin
-
-Vid uppstart skapas en admin-användare om den inte redan finns.
-
-```text
+Admin-inloggning
 Användarnamn: admin
 Lösenord: admin1234
-```
 
-De här uppgifterna är endast för lokal demo. I en riktig miljö ska `ADMIN_PASSWORD` sättas till ett starkt lösenord utanför koden.
+Logga in genom POST /auth/login.
 
-## Funktioner
+Kopiera sedan JWT-token från svaret och ange den genom knappen Authorize i Swagger.
 
-- Skapa och hämta anställda
-- Skapa och hämta arbetspass
-- Lägga till och ta bort anställda från arbetspass
-- Ta bort anställda med `DELETE /employees/{id}`
-- Skyddade endpoints för admin
-- Swagger/OpenAPI
+Teknik
+Java 17
+Spring Boot
+Spring Web MVC
+Spring Data JPA
+Spring Security
+JWT
+PostgreSQL
+H2
+MapStruct
+Maven
+Docker
+GitHub Actions
+Swagger/OpenAPI
+Funktioner
+Skapa och hämta anställda
+Skapa och hämta arbetspass
+Lägga till anställda på arbetspass
+Ta bort anställda från arbetspass
+Ta bort anställda
+JWT-baserad inloggning
+Rollbaserad åtkomstkontroll
+Validering av inkommande data
+Global felhantering
+Tester
 
-## Felhantering och validering
+Projektet innehåller tester för:
 
-Projektet har en egen `ResourceNotFoundException` och en global exception handler som returnerar 404 när en resurs saknas.
+Service-lagret med JUnit och Mockito
+Repository-lagret mot H2
+Controller-lagret med MockMvc
 
-DTO:er för att skapa anställda och arbetspass har validation-regler. Controllers använder `@Valid`, så ogiltig input stoppas innan service-lagret körs.
+Tester körs automatiskt genom GitHub Actions.
 
-## Tester
+Kör tester lokalt med:
 
-Testerna täcker service-, repository- och controller-lagret. Controller-testerna använder `MockMvc` och mockad admin-användare.
+./mvnw test
+Lokal start
+
+Projektet kräver PostgreSQL och följande miljövariabler:
+
+export DB_URL=<database-url>
+export DB_USERNAME=<database-username>
+export DB_PASSWORD=<database-password>
+export JWT_SECRET=<jwt-secret>
+export ADMIN_PASSWORD=<admin-password>
+
+Starta applikationen med:
+
+./mvnw spring-boot:run
+
+Demo-inloggningen och databasen är endast avsedda för testning.
