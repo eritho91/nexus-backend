@@ -3,6 +3,7 @@ package se.iths.erikthorell.nexusnewdemo.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import se.iths.erikthorell.nexusnewdemo.dto.CreateShiftRequest;
+import se.iths.erikthorell.nexusnewdemo.dto.ShiftBookedMessage;
 import se.iths.erikthorell.nexusnewdemo.dto.ShiftDto;
 import se.iths.erikthorell.nexusnewdemo.entity.Employee;
 import se.iths.erikthorell.nexusnewdemo.entity.Shift;
@@ -21,6 +22,7 @@ public class ShiftService {
     private final ShiftRepository shiftRepository;
     private final EmployeeRepository employeeRepository;
     private final ShiftMapper shiftMapper;
+    private final ShiftBookedProducer shiftBookedProducer;
 
 
     public List<ShiftDto> getAllShifts() {
@@ -67,6 +69,15 @@ public class ShiftService {
 
 
         shift.getEmployees().add(employee);
+
+        ShiftBookedMessage message = new ShiftBookedMessage(
+                employee.getUsername(),
+                employee.getFirstName() + " " + employee.getLastName(),
+                shift.getLocation(),
+                shift.getShiftTime()
+        );
+
+        shiftBookedProducer.sendShiftBookedMessage(message);
 
         return shiftMapper.toDto(
                 shiftRepository.save(shift)

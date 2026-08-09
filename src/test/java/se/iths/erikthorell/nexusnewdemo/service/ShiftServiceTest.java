@@ -5,6 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import se.iths.erikthorell.nexusnewdemo.dto.CreateShiftRequest;
 import se.iths.erikthorell.nexusnewdemo.dto.EmployeeSummaryDto;
 import se.iths.erikthorell.nexusnewdemo.dto.ShiftDto;
@@ -21,6 +23,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class ShiftServiceTest {
@@ -30,6 +33,8 @@ public class ShiftServiceTest {
     private ShiftRepository shiftRepository;
     @Mock
     private ShiftMapper shiftMapper;
+    @Mock
+    private ShiftBookedProducer shiftBookedProducer;
 
     @InjectMocks
     private ShiftService shiftService;
@@ -136,6 +141,7 @@ public class ShiftServiceTest {
         ShiftDto actualResponse = shiftService.addEmployeeToShift(shift.getId(), employee.getId());
 
         assertEquals(expectedResponse, actualResponse);
+        verify(shiftBookedProducer).sendShiftBookedMessage(any());
     }
 
     @Test
@@ -173,5 +179,13 @@ public class ShiftServiceTest {
 
         ShiftDto actualResponse = shiftService.removeEmployeeFromShift(shift.getId(), employee.getId());
         assertEquals(expectedResponse, actualResponse);
+
     }
+
+    @MockitoBean
+    private JavaMailSender javaMailSender;
+
+    @Test
+
+
 }
