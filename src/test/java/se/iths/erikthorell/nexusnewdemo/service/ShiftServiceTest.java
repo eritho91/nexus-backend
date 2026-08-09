@@ -181,11 +181,4 @@ public class ShiftServiceTest {
         assertEquals(expectedResponse, actualResponse);
 
     }
-
-    @MockitoBean
-    private JavaMailSender javaMailSender;
-
-    @Test
-
-
 }
