@@ -1,69 +1,94 @@
-# Nexus New Demo
+# Nexus Backend
 
-Spring Boot-projekt för att hantera anställda och arbetspass. Projektet innehåller REST-endpoints, JWT-baserad säkerhet, PostgreSQL i applikationen och H2 i tester.
+Nexus is a Spring Boot backend for managing employees and work shifts.
 
-## Teknik
+The project demonstrates backend development with REST APIs, authentication and authorization, relational databases, validation, error handling, automated testing, Docker, and continuous integration.
 
-- Java 17
-- Spring Boot
-- Spring Web MVC
-- Spring Data JPA
-- Spring Security och JWT
-- PostgreSQL
-- H2 för tester
-- MapStruct
-- Maven
+## Live Demo
 
-## Kom igång lokalt
+Swagger UI:
 
-Projektet kräver en PostgreSQL-databas och följande miljövariabler:
+https://gastric-valencia-klerk-4f003058.koyeb.app/swagger-ui/index.html
 
-```bash
-export DB_URL=jdbc:postgresql://localhost:5432/nexus
-export DB_USERNAME=postgres
-export DB_PASSWORD=postgres
-export JWT_SECRET=01234567890123456789012345678901
-export ADMIN_PASSWORD=admin1234
+Demo administrator account:
+
+```text
+Username: admin
+Password: admin1234
 ```
 
-Starta applikationen:
+Log in using:
 
-```bash
-./mvnw spring-boot:run
+```text
+POST /auth/login
 ```
 
-Kör tester:
+Copy the returned JWT and use the **Authorize** button in Swagger to authenticate.
+
+The demo account and database are intended for testing purposes only.
+
+## Tech Stack
+
+* Java 17
+* Spring Boot
+* Spring Web MVC
+* Spring Data JPA
+* Spring Security
+* JWT
+* PostgreSQL
+* H2
+* MapStruct
+* Maven
+* Docker
+* GitHub Actions
+* Swagger / OpenAPI
+
+## Features
+
+* Create and retrieve employees
+* Create and retrieve work shifts
+* Assign employees to shifts
+* Remove employees from shifts
+* Delete employees
+* JWT-based authentication
+* Role-based authorization
+* Request validation
+* Global exception handling
+
+## Testing
+
+The project includes tests for multiple application layers:
+
+* Service-layer tests using JUnit and Mockito
+* Repository tests using H2
+* Controller tests using MockMvc
+
+Tests are also executed automatically through GitHub Actions.
+
+Run the tests locally with:
 
 ```bash
 ./mvnw test
 ```
 
-## Demo-admin
+## Running Locally
 
-Vid uppstart skapas en admin-användare om den inte redan finns.
+The application requires PostgreSQL and the following environment variables:
 
-```text
-Användarnamn: admin
-Lösenord: admin1234
+```bash
+export DB_URL=<database-url>
+export DB_USERNAME=<database-username>
+export DB_PASSWORD=<database-password>
+export JWT_SECRET=<jwt-secret>
+export ADMIN_PASSWORD=<admin-password>
 ```
 
-De här uppgifterna är endast för lokal demo. I en riktig miljö ska `ADMIN_PASSWORD` sättas till ett starkt lösenord utanför koden.
+Start the application with:
 
-## Funktioner
+```bash
+./mvnw spring-boot:run
+```
 
-- Skapa och hämta anställda
-- Skapa och hämta arbetspass
-- Lägga till och ta bort anställda från arbetspass
-- Ta bort anställda med `DELETE /employees/{id}`
-- Skyddade endpoints för admin
-- Swagger/OpenAPI
+## Project Focus
 
-## Felhantering och validering
-
-Projektet har en egen `ResourceNotFoundException` och en global exception handler som returnerar 404 när en resurs saknas.
-
-DTO:er för att skapa anställda och arbetspass har validation-regler. Controllers använder `@Valid`, så ogiltig input stoppas innan service-lagret körs.
-
-## Tester
-
-Testerna täcker service-, repository- och controller-lagret. Controller-testerna använder `MockMvc` och mockad admin-användare.
+Nexus is designed as a portfolio project demonstrating a structured Spring Boot backend with security, persistence, validation, testing, API documentation, containerization, and automated builds.
