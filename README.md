@@ -1,79 +1,52 @@
 # Nexus Backend
 
-Nexus is a Spring Boot backend for managing employees and work shifts.
+Spring Boot backend for employee and shift management.
 
-The project demonstrates backend development with REST APIs, authentication and authorization, relational databases, validation, error handling, automated testing, Docker, and continuous integration.
+It includes JWT login, role-based access, PostgreSQL persistence, validation, Swagger docs, RabbitMQ messaging, email support, Docker, and automated tests.
 
-## Live Demo
+## Demo
 
 Swagger UI:
 
 https://gastric-valencia-klerk-4f003058.koyeb.app/swagger-ui/index.html
 
-Demo administrator account:
+Demo login:
 
 ```text
 Username: admin
 Password: admin1234
 ```
 
-Log in using:
+Log in with `POST /auth/login`, then use the returned JWT in Swagger's Authorize dialog.
 
-```text
-POST /auth/login
-```
+## Stack
 
-Copy the returned JWT and use the **Authorize** button in Swagger to authenticate.
+- Java 17
+- Spring Boot
+- Spring Web MVC
+- Spring Security
+- Spring Data JPA
+- PostgreSQL / H2
+- RabbitMQ
+- MapStruct
+- Maven
+- Docker
+- Swagger / OpenAPI
 
-The demo account and database are intended for testing purposes only.
+## Main Endpoints
 
-## Tech Stack
+- `POST /auth/login`
+- `GET /employees`
+- `POST /employees`
+- `DELETE /employees/{id}`
+- `GET /shifts`
+- `POST /shifts`
+- `POST /shifts/{shiftId}/employees/{employeeId}`
+- `DELETE /shifts/{shiftId}/employees/{employeeId}`
 
-* Java 17
-* Spring Boot
-* Spring Web MVC
-* Spring Data JPA
-* Spring Security
-* JWT
-* PostgreSQL
-* H2
-* MapStruct
-* Maven
-* Docker
-* GitHub Actions
-* Swagger / OpenAPI
+## Run Locally
 
-## Features
-
-* Create and retrieve employees
-* Create and retrieve work shifts
-* Assign employees to shifts
-* Remove employees from shifts
-* Delete employees
-* JWT-based authentication
-* Role-based authorization
-* Request validation
-* Global exception handling
-
-## Testing
-
-The project includes tests for multiple application layers:
-
-* Service-layer tests using JUnit and Mockito
-* Repository tests using H2
-* Controller tests using MockMvc
-
-Tests are also executed automatically through GitHub Actions.
-
-Run the tests locally with:
-
-```bash
-./mvnw test
-```
-
-## Running Locally
-
-The application requires PostgreSQL and the following environment variables:
+Set the required environment variables:
 
 ```bash
 export DB_URL=<database-url>
@@ -81,14 +54,23 @@ export DB_USERNAME=<database-username>
 export DB_PASSWORD=<database-password>
 export JWT_SECRET=<jwt-secret>
 export ADMIN_PASSWORD=<admin-password>
+export MAIL_USERNAME=<mail-username>
+export MAIL_PASSWORD=<mail-password>
+export RABBITMQ_USERNAME=<rabbitmq-username>
+export RABBITMQ_PASSWORD=<rabbitmq-password>
+export RABBITMQ_VHOST=<rabbitmq-vhost>
 ```
 
-Start the application with:
+Start the app:
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
-## Project Focus
+The API runs on port `8000`.
 
-Nexus is designed as a portfolio project demonstrating a structured Spring Boot backend with security, persistence, validation, testing, API documentation, containerization, and automated builds.
+## Tests
+
+```bash
+./mvnw test
+```
